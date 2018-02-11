@@ -28,11 +28,13 @@ def hist_timeseries(ts, labels=['x', 'y', 'z', 'bx', 'by', 'bz'],
 
     start_index, end_index = index_helper(start_time, end_time, time)
 
-    for column, legend in zip(ts['Data'].T, labels):
+    colors = ['dodgerblue','darkorange','g','r','c','m','y','k','w']
+
+    for column, legend, color in zip(ts['Data'].T, labels, colors):
         plt.figure()
         plt.ion()
 
-        plt.hist(column[start_index:end_index], label = legend)
+        plt.hist(column[start_index:end_index], label = legend, color=color)
 
         plt.ylabel('#')
         plt.xlabel(xlabel)
