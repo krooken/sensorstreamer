@@ -9,19 +9,19 @@ def read_data(filename):
     """
 
     data = {
-        'GYR': [],
-        'ACC': [],
-        'RSSWIFI': [],
-        'GPS': [],
-        'RAWGYR': [],
-        'PRX': [],
-        'MAG': [],
-        'RAWMAG': [],
-        'LGT': [],
-        'PRS': [],
-        'ORI': [],
-        'RSSBLE': [],
-        'RSSCELL': []}
+        'GYR': [],      # Gyroscope; x, y, z [rad/s]
+        'ACC': [],      # Accelerometer; x, y, z [m/s^2]
+        'RSSWIFI': [],  # Received Signal Strength: WiFi
+        'GPS': [],      # GPS [deg North, deg East, alt m]
+        'RAWGYR': [],   # Uncalibrated gyroscope; x, y, z, bx, by, bz [rad/s]
+        'PRX': [],      # Proximity; [cm]
+        'MAG': [],      # Magnetometer; x, y, z [uT]
+        'RAWMAG': [],   # Uncalibrated magnetometer; x, y, z, bx, by, bz [uT]
+        'LGT': [],      # Light [lx]
+        'PRS': [],      # Pressure [hPa]
+        'ORI': [],      # Orientation [normalized quaternion]
+        'RSSBLE': [],   # Received Signal Strength: Bluetooth Low Energy
+        'RSSCELL': []}  # Received Signal Strength: Cellular
 
     # Keep track of the elements that weren't parsed.
     unknown_tags = set()
