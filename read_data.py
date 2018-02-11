@@ -37,3 +37,15 @@ def read_data(filename):
                 # The tag is currently unknown.
                 unknown_tags.add(tag)
     return data, unknown_tags
+
+def extract_timeseries(data, tag):
+    timeseries = {'Tag': tag, 'Time': [], 'Data': []}
+
+    timeseries['Data'] = np.asarray([
+        [float(elem) for elem in reading[1:]
+            ] for reading in data[tag]])
+
+    timeseries['Time'] = np.asarray(
+        [float(reading[0]) for reading in data[tag]])
+
+    return timeseries
