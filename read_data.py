@@ -49,3 +49,15 @@ def extract_timeseries(data, tag):
         [float(reading[0]) for reading in data[tag]])
 
     return timeseries
+
+def get_data_ssid(data, ssid):
+    tag = 'RSSWIFI'
+
+    timeseries = {'Tag': tag, 'Time': [], 'Data': []}
+
+    data_ssid = list(filter((lambda x: x[2] == ssid), data[tag]))
+    timeseries['Data'] = np.asarray([int(reading[-1]) for reading in data_ssid])
+
+    timeseries['Time'] = np.asarray([float(reading[0]) for reading in data_ssid])
+
+    return timeseries
