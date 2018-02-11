@@ -1,5 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import calc_stats
+import math
 
 def plot_timeseries(ts, labels=['x', 'y', 'z', 'bx', 'by', 'bz'],
         ylabel='', start_time=-1, end_time=-1):
@@ -22,7 +24,7 @@ def plot_timeseries(ts, labels=['x', 'y', 'z', 'bx', 'by', 'bz'],
     plt.ioff()
 
 def hist_timeseries(ts, labels=['x', 'y', 'z', 'bx', 'by', 'bz'],
-        xlabel='', start_time=-1, end_time=-1):
+        xlabel='', start_time=-1, end_time=-1, plot_dist=False):
 
     time = time_offset_base(ts['Time'])
 
@@ -30,11 +32,24 @@ def hist_timeseries(ts, labels=['x', 'y', 'z', 'bx', 'by', 'bz'],
 
     colors = ['dodgerblue','darkorange','g','r','c','m','y','k','w']
 
-    for column, legend, color in zip(ts['Data'].T, labels, colors):
+    for column, legend, color in \
+            zip(ts['Data'].T, labels, colors):
         plt.figure()
         plt.ion()
 
-        plt.hist(column[start_index:end_index], label = legend, color=color)
+        data = column[start_index:end_index]
+        nr_bins = math.sqrt(data.size)
+        n,bins,_ = plt.hist(data,
+            label=legend,
+            color=color,
+            bins='auto')
+
+        if plot_dist:
+            sum = 0.0
+            for i in range(0,len(n)):
+                sum += n[i]*(bins[i+1] - bins[i])
+            x, c = calc_stats.bell_curve(data)
+            plt.plot(x, np.multiply(c, sum), color='k')
 
         plt.ylabel('#')
         plt.xlabel(xlabel)
