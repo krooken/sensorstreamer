@@ -12,7 +12,7 @@ def ts_std(ts):
 
 def ts_norm(ts):
     pows = np.power(ts['Data'],2)
-    return [np.sqrt(np.add.reduce(pow)) for pow in pows]
+    return np.asarray([np.sqrt(np.add.reduce(pow)) for pow in pows])
 
 def bell_curve(array):
     mean = np.mean(array)
