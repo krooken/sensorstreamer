@@ -29,7 +29,7 @@ def plot_timeseries(ts, labels=['x', 'y', 'z', 'bx', 'by', 'bz'],
     plt.ioff()
 
     if len(file_name) > 0:
-        plt.savefig(file_name + ts['Tag'] + '.pdf', bbox_inches='tight')
+        plt.savefig(file_name + '_' + ts['Tag'] + '_ts' + '.pdf', bbox_inches='tight')
 
 def hist_timeseries(ts, labels=['x', 'y', 'z', 'bx', 'by', 'bz'],
         xlabel='', start_time=-1, end_time=-1, plot_dist=False,
@@ -59,7 +59,7 @@ def hist_timeseries(ts, labels=['x', 'y', 'z', 'bx', 'by', 'bz'],
                 for i in range(0,len(n)):
                     real_sum += n[i]*(bins[i+1] - bins[i])
                 x, c = calc_stats.bell_curve(data)
-                plt.plot(x, np.multiply(c, real_sum), color='k')
+                plt.plot(x, np.multiply(c, real_sum), color='k', label='Norm.Dist')
 
             plt.ylabel('#')
             plt.xlabel(xlabel)
@@ -70,7 +70,7 @@ def hist_timeseries(ts, labels=['x', 'y', 'z', 'bx', 'by', 'bz'],
             plt.ioff()
 
             if len(file_name) > 0:
-                plt.savefig(file_name + ts['Tag'] + '.pdf', bbox_inches='tight')
+                plt.savefig(file_name + '_' + ts['Tag'] + '_hist_' + legend + '.pdf', bbox_inches='tight')
     else:
         plt.figure()
         plt.ion()
@@ -87,7 +87,7 @@ def hist_timeseries(ts, labels=['x', 'y', 'z', 'bx', 'by', 'bz'],
             for i in range(0,len(n)):
                 real_sum += n[i]*(bins[i+1] - bins[i])
             x, c = calc_stats.bell_curve(data)
-            plt.plot(x, np.multiply(c, real_sum), color='k')
+            plt.plot(x, np.multiply(c, real_sum), color='k', label='Norm.Dist')
 
         plt.ylabel('#')
         plt.xlabel(xlabel)
@@ -98,7 +98,7 @@ def hist_timeseries(ts, labels=['x', 'y', 'z', 'bx', 'by', 'bz'],
         plt.ioff()
 
         if len(file_name) > 0:
-            plt.savefig(file_name + ts['Tag'] + '.pdf', bbox_inches='tight')
+            plt.savefig(file_name + '_' + ts['Tag'] + '_hist_' + labels[0] + '.pdf', bbox_inches='tight')
 
 
 def index_helper(start_time, end_time, time):
