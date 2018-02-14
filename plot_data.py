@@ -4,7 +4,8 @@ import calc_stats
 import math
 
 def plot_timeseries(ts, labels=['x', 'y', 'z', 'bx', 'by', 'bz'],
-        ylabel='', start_time=-1, end_time=-1):
+        ylabel='', start_time=-1, end_time=-1,
+        file_name=''):
     plt.figure()
     plt.ion()
 
@@ -12,8 +13,12 @@ def plot_timeseries(ts, labels=['x', 'y', 'z', 'bx', 'by', 'bz'],
 
     start_index, end_index = index_helper(start_time, end_time, time)
 
-    for column, legend in zip(ts['Data'].T, labels):
-        plt.plot(time[start_index:end_index], column[start_index:end_index], label=legend)
+    data = ts['Data']
+    if data.ndim > 1:
+        for column, legend in zip(data.T, labels):
+            plt.plot(time[start_index:end_index], column[start_index:end_index], label=legend)
+    else:
+        plt.plot(time[start_index:end_index], data[start_index:end_index], label=labels[0])
 
     plt.ylabel(ylabel)
     plt.xlabel('Time [s]')
@@ -23,8 +28,12 @@ def plot_timeseries(ts, labels=['x', 'y', 'z', 'bx', 'by', 'bz'],
     plt.show()
     plt.ioff()
 
+    if len(file_name) > 0:
+        plt.savefig(file_name + ts['Tag'] + '.pdf', bbox_inches='tight')
+
 def hist_timeseries(ts, labels=['x', 'y', 'z', 'bx', 'by', 'bz'],
-        xlabel='', start_time=-1, end_time=-1, plot_dist=False):
+        xlabel='', start_time=-1, end_time=-1, plot_dist=False,
+        file_name=''):
 
     time = time_offset_base(ts['Time'])
 
@@ -32,24 +41,53 @@ def hist_timeseries(ts, labels=['x', 'y', 'z', 'bx', 'by', 'bz'],
 
     colors = ['dodgerblue','darkorange','g','r','c','m','y','k','w']
 
-    for column, legend, color in \
-            zip(ts['Data'].T, labels, colors):
+    if ts['Data'].ndim > 1:
+        for column, legend, color in \
+                zip(ts['Data'].T, labels, colors):
+            plt.figure()
+            plt.ion()
+
+            data = column[start_index:end_index]
+            nr_bins = math.sqrt(data.size)
+            n,bins,_ = plt.hist(data,
+                label=legend,
+                color=color,
+                bins='auto')
+
+            if plot_dist:
+                real_sum = 0.0
+                for i in range(0,len(n)):
+                    real_sum += n[i]*(bins[i+1] - bins[i])
+                x, c = calc_stats.bell_curve(data)
+                plt.plot(x, np.multiply(c, real_sum), color='k')
+
+            plt.ylabel('#')
+            plt.xlabel(xlabel)
+            plt.title(ts['Tag'])
+
+            plt.legend()
+            plt.show()
+            plt.ioff()
+
+            if len(file_name) > 0:
+                plt.savefig(file_name + ts['Tag'] + '.pdf', bbox_inches='tight')
+    else:
         plt.figure()
         plt.ion()
 
-        data = column[start_index:end_index]
+        data = ts['Data'][start_index:end_index]
         nr_bins = math.sqrt(data.size)
         n,bins,_ = plt.hist(data,
-            label=legend,
-            color=color,
+            label=labels[0],
+            color=colors[0],
             bins='auto')
 
         if plot_dist:
-            sum = 0.0
+            real_sum = 0.0
             for i in range(0,len(n)):
-                sum += n[i]*(bins[i+1] - bins[i])
+                real_sum += n[i]*(bins[i+1] - bins[i])
             x, c = calc_stats.bell_curve(data)
-            plt.plot(x, np.multiply(c, sum), color='k')
+            plt.plot(x, np.multiply(c, real_sum), color='k')
 
         plt.ylabel('#')
         plt.xlabel(xlabel)
@@ -58,6 +96,10 @@ def hist_timeseries(ts, labels=['x', 'y', 'z', 'bx', 'by', 'bz'],
         plt.legend()
         plt.show()
         plt.ioff()
+
+        if len(file_name) > 0:
+            plt.savefig(file_name + ts['Tag'] + '.pdf', bbox_inches='tight')
+
 
 def index_helper(start_time, end_time, time):
 
